@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
 
 	clearScreen();
 	displayHeader();
-
+	displayMenu();
 
 
 
@@ -167,7 +167,7 @@ void printText(char *text) {
 	for (int i = 0; text[i] != '\0'; i++) {
 		printf("%c", text[i]);
 		fflush(stdout); // outputs to console 1 char at a time instead of buffering all first
-		Sleep(50);
+		Sleep(25);
 	}
 
 	Sleep(1000);
@@ -175,14 +175,14 @@ void printText(char *text) {
 
 /* Display main menu */
 void displayMenu(void) {
-	printText("Welcome to the Wolf Accounting Wolf Payroll™ System.\n");
-	printText("1. View Employees");
-	printText("2. Add Employee");
-	printText("3. Change Employee Employment status");
-	printText("4. Change Employee Department");
-	printText("5. Change Employee Pay Rate");
-	printText("6. Calculate Payrole for ");
-	printText("Please select an option from the menu [1-5]:");
+	printText("Welcome to the Wolf Accounting Payroll System.\n\n");
+	printText("1. View Employees\n");
+	printText("2. Add Employee\n");
+	printText("3. Change Employee Employment status\n");
+	printText("4. Change Employee Department\n");
+	printText("5. Change Employee Pay Rate\n");
+	printText("6. Calculate Payrole for this week\n\n");
+	printText("Please select an option from the menu [1-6]: ");
 }
 
 /* Processes wages for employees and save to file */
