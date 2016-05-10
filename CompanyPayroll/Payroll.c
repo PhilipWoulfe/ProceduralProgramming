@@ -122,8 +122,7 @@ int main(int argc, char* argv[])
 		printText("Employee records loaded...\n");
 	}
 
-	clearScreen();
-	displayHeader();
+	
 	displayMenu();
 
 	// loop through menu until quit
@@ -221,6 +220,10 @@ void printText(char *text) {
 
 /* Display main menu */
 void displayMenu(void) {
+
+	clearScreen();
+	displayHeader();
+
 	printText("Welcome to the Wolf Accounting Payroll System.\n\n");
 	printText("1. View Employees\n");
 	printText("2. Add Employee\n");
