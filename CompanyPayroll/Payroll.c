@@ -32,6 +32,7 @@ typedef enum {
 	MANAGER = 3,
 } Rate_t;
 
+/* create employe data type */
 typedef struct {
 	char name[50];
 	Department_t dept;
@@ -53,7 +54,7 @@ void printText(char *text);
 void displayMenu(void);
 
 /* Display Employees */
-void displayEmployees(void);
+void displayEmployees(Employee_t employees[]);
 
 /* Create a new employee*/
 void newEmployee(char *name, Department_t dept, Rate_t rate);
@@ -76,6 +77,9 @@ void processWages(); //TODO Reimplement
 
 int main(int argc, char* argv[])
 {
+	// declare variables
+	char input;
+	
 	clearScreen();
 	displayHeader();
 
@@ -118,8 +122,8 @@ int main(int argc, char* argv[])
 		printText("Employee records loaded...\n");
 	}
 
-	char input;
 
+	// loop through menu until quit
 	do {
 		clearScreen();
 		displayHeader();
@@ -128,49 +132,47 @@ int main(int argc, char* argv[])
 		input = getchar();
 
 		switch (input) {
-			case 1:
+			case '1':
 				//displayEmployees();
 				break;
 
-			case 2:
+			case '2':
 				//newEmployee();
 				break;
 
-			case 3:
+			case '3':
 				//setCurrentEmployee(char *name, bool b);
 				break;
 
-			case 4:
+			case '4':
 				//changeDept(char *name, Department_t dept)
 				break;
 
-			case 5:
+			case '5':
 				//changeRate(char *name, Rate_t rate)
 				break;
 				
-			case 6:
+			case '6':
 				//void processWages(Employee_t empArr[])
 				break;
 
-			case 7:
-
+			case '7':
 				break;
 
 			default:
-
-				printf("Unrecognised Command - Please enter value from 1-7")
+				printf("Unrecognised Command - Please enter value from 1-7\n");
 		}
 
 	} while (input != '7');
 
 	//processWages();
 
+	printText("Exiting program...\n");
+
 
 	// close infile
 	fclose(inptr);
-
-
-
+	
 	// temprary to keep program open
 	getchar();
 
@@ -222,7 +224,7 @@ void displayMenu(void) {
 	printText("3. Change Employee Employment status\n");
 	printText("4. Change Employee Department\n");
 	printText("5. Change Employee Pay Rate\n");
-	printText("6. Calculate Payroll for this week\n\n");
+	printText("6. Calculate Payroll for this week\n");
 	printText("7. Quit\n\n");
 	printText("Please select an option from the menu [1-7]: ");
 }
@@ -231,8 +233,6 @@ void displayMenu(void) {
 //void processWages(Employee_t empArr[]) { //TODO reimplement
 void processWages() { 
 	
-
-
 	// get date
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
