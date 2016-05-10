@@ -122,12 +122,12 @@ int main(int argc, char* argv[])
 		printText("Employee records loaded...\n");
 	}
 
+	clearScreen();
+	displayHeader();
+	displayMenu();
 
 	// loop through menu until quit
 	do {
-		clearScreen();
-		displayHeader();
-		displayMenu();
 
 		input = getchar();
 
@@ -160,7 +160,10 @@ int main(int argc, char* argv[])
 				break;
 
 			default:
-				printf("Unrecognised Command - Please enter value from 1-7\n");
+				if (input == '\n')
+					continue;
+
+				printf("\nUnrecognised Command - Please enter value from 1-7:");
 		}
 
 	} while (input != '7');
@@ -210,7 +213,7 @@ void printText(char *text) {
 	for (int i = 0; text[i] != '\0'; i++) {
 		printf("%c", text[i]);
 		fflush(stdout); // outputs to console 1 char at a time instead of buffering all first
-		Sleep(25);
+		Sleep(10);
 	}
 
 	Sleep(1000);
@@ -227,6 +230,7 @@ void displayMenu(void) {
 	printText("6. Calculate Payroll for this week\n");
 	printText("7. Quit\n\n");
 	printText("Please select an option from the menu [1-7]: ");
+
 }
 
 /* Processes wages for employees and save to file */
