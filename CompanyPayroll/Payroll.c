@@ -53,6 +53,12 @@ void printText(char *text);
 /* Display main menu */
 void displayMenu(void);
 
+/* Load Employees */
+void loadEmployees(Employee_t employees[]);
+
+/* Get fields from csv */
+const char* getfield(char* line, int num);
+
 /* Display Employees */
 void displayEmployees(Employee_t employees[]);
 
@@ -77,52 +83,24 @@ void processWages(); //TODO Reimplement
 
 int main(int argc, char* argv[])
 {
-	// declare variables
-	char input;
-	
-	clearScreen();
-	displayHeader();
-
-	// ensure proper usage
+    	// ensure proper usage
 	if (argc != 1)
 	{
 		printf("Usage: ./payroll (No arguments)\n");
 		return 1;
 	}
 
-	printText("Loading employee records...\n");
+	// declare variables
+	char input;
+	Employee_t (*employees_p)[50] = malloc(50 * sizeof(Employee_t));
+	if (NULL == employees_p) {
+        fprintf(stderr, "malloc failed\n");
+        return(-1);
+    }
 
-	// remember filenames
-	char *infile = "EmployeeList.csv";
-
-	// open input file 
-	FILE* inptr = fopen(infile, "r+");
-	if (inptr == NULL)
-	{
-		/* Create message string */
-		char *message = "Could not open ";
-		char *messageFull = malloc(strlen(message) + 1 + strlen(infile) + "...\n");
-		strcpy(messageFull, message);
-		strcat(messageFull, infile);
-		strcat(messageFull, "...\n");
-
-		printText(messageFull);
-		
-		printText("Creating File...\n");
-		Sleep(2000);
-		
-		inptr = fopen(infile, "w");
-		
-		printText("File Created...\n");
-
-		// free memory
-		free(messageFull);
-	}
-	else {
-		printText("Employee records loaded...\n");
-	}
-
-	
+    clearScreen();
+	displayHeader();
+    //loadEmployees(employees_p);
 	displayMenu();
 
 	// loop through menu until quit
@@ -150,7 +128,7 @@ int main(int argc, char* argv[])
 			case '5':
 				//changeRate(char *name, Rate_t rate)
 				break;
-				
+
 			case '6':
 				//void processWages(Employee_t empArr[])
 				break;
@@ -172,9 +150,8 @@ int main(int argc, char* argv[])
 	printText("Exiting program...\n");
 
 
-	// close infile
-	fclose(inptr);
-	
+
+
 	// temprary to keep program open
 	getchar();
 
@@ -215,7 +192,71 @@ void printText(char *text) {
 		Sleep(10);
 	}
 
-	Sleep(1000);
+	Sleep(50);
+}
+
+/* Load employee record */
+void loadEmployees(Employee_t employees_p[]) {
+
+    printText("Loading employee records...\n");
+
+	// remember filenames
+	char *infile = "EmployeeList.csv";
+
+    // Load employee records
+    loadEmployees(employees_p);
+
+	// open input file
+	FILE* inptr = fopen(infile, "r");
+	if (inptr == NULL)
+	{
+		/* Create message string */
+		char *message = "Could not open ";
+		char *messageFull = malloc(strlen(message) + 1 + strlen(infile) + "...\n");
+		strcpy(messageFull, message);
+		strcat(messageFull, infile);
+		strcat(messageFull, "...\n");
+
+		printText(messageFull);
+
+		printText("Creating File...\n");
+		Sleep(2000);
+
+		inptr = fopen(infile, "w");
+
+		printText("File Created...\n");
+
+		// free memory
+		free(messageFull);
+	}
+	else {
+		printText("Employee records loaded...\n");
+	}
+
+	char line[50];
+    while (fgets(line, 50, inptr))
+    {
+        char* tmp = strdup(line);
+        printf("Field 3 would be %s\n", getfield(tmp, 1));
+        // NOTE strtok clobbers tmp
+        free(tmp);
+    }
+
+    // close infile
+	fclose(inptr);
+}
+
+const char* getfield(char* line, int num)
+{
+    const char* tok;
+    for (tok = strtok(line, ",");
+            tok && *tok;
+            tok = strtok(NULL, ",\n"))
+    {
+        if (!--num)
+            return tok;
+    }
+    return NULL;
 }
 
 /* Display main menu */
@@ -238,8 +279,8 @@ void displayMenu(void) {
 
 /* Processes wages for employees and save to file */
 //void processWages(Employee_t empArr[]) { //TODO reimplement
-void processWages() { 
-	
+void processWages() {
+
 	// get date
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
@@ -255,7 +296,7 @@ void processWages() {
 
 	int monthNum = tm.tm_mon + 1;
 	sprintf(tempMonth, "%d", monthNum);
-	
+
 	// add 0 if necessary
 	if (monthNum / 10 == 0) {
 		// convert int to char *
@@ -263,7 +304,7 @@ void processWages() {
 	}
 	else
 		strcpy(month, tempMonth);
-	
+
 	// get day
 	char day[3];
 	char tempDay[3];
@@ -271,7 +312,7 @@ void processWages() {
 
 	int dayNum = tm.tm_mday + 7 - tm.tm_wday; // gets date for Sunday of that week
 	sprintf(tempDay, "%d", dayNum);
-	
+
 	// add 0 if necessary
 	if (dayNum / 10 == 0)
 		strcat(day, tempDay);
@@ -282,13 +323,13 @@ void processWages() {
 	char *outfile_basic = "Payroll_Week_Ending_";
 	int temp = sizeof(outfile_basic) + sizeof(year) + sizeof("-") + sizeof(3) + sizeof("-") + sizeof(3) + sizeof(".csv") + '\0';
 	char *outfile = malloc(temp);
-	
+
 	outfile = strcpy(outfile, outfile_basic);
-	
+
 	// add year
-	outfile = strcat(outfile, year); 
+	outfile = strcat(outfile, year);
 	outfile = strcat(outfile, "-");
-	
+
 	// add month
 	outfile = strcat(outfile, month);
 	outfile = strcat(outfile, "-");
@@ -297,13 +338,13 @@ void processWages() {
 	outfile = strcat(outfile, ".csv");
 
 	printText("Creating output file...\n");
-	
+
 	// create output file
 	FILE* outptr = fopen(outfile, "w");
 	if (outptr == NULL)
 	{
 		// TODO reimplement somehow
-		//fclose(inptr); 
+		//fclose(inptr);
 
 		// create error message
 		char *message = "Could not create ";
@@ -313,9 +354,9 @@ void processWages() {
 		strcat(messageFull, "...\n");
 
 		printText(messageFull);
-		
+
 		Sleep(2000);
-		
+
 		// free memory
 		free(messageFull);
 
@@ -326,10 +367,10 @@ void processWages() {
 	else {
 		printText("Output file created...\n");
 	}
-	
+
 	// close outfile
 	fclose(outptr);
-	
+
 	// free memory
 	//free(outfile); // TODO Causing error
 
