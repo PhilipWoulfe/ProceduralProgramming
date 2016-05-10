@@ -103,6 +103,7 @@ int main(int argc, char* argv[])
     loadEmployees(employees_p);
 	displayMenu();
 
+    printf((*employees_p[0]).name);
 	// loop through menu until quit
 	do {
 
@@ -232,12 +233,14 @@ void loadEmployees(Employee_t employees_p[]) {
 
 	char line[50];
 	int count = 0;
+	Employee_t emp[50];
+	employees_p = &emp;
     while (fgets(line, 50, inptr))
     {
         char* tmp = strdup(line);
         //if (employee_p[count] != NULL) {
-            //employee_p[count].name = getfield(tmp, 1);
-            printf("Field 3 would be %s\n", getfield(tmp, 1));
+        *employees_p[count++].name = getfield(tmp, 1);
+        //printf("Field 3 would be %s\n", getfield(tmp, 1));
         //}
 
         // NOTE strtok clobbers tmp
