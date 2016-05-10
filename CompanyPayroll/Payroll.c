@@ -52,6 +52,9 @@ void printText(char *text);
 /* Display main menu */
 void displayMenu(void);
 
+/* Display Employees */
+void displayEmployees(void);
+
 /* Create a new employee*/
 void newEmployee(char *name, Department_t dept, Rate_t rate);
 
@@ -70,7 +73,6 @@ void saveEmployeesToFile(Employee_t empArr[]);
 /* Processes wages for employees */
 //void processWages(Employee_t empArr[]);
 void processWages(); //TODO Reimplement
-
 
 int main(int argc, char* argv[])
 {
@@ -116,13 +118,52 @@ int main(int argc, char* argv[])
 		printText("Employee records loaded...\n");
 	}
 
-	processWages();
+	char input;
 
-	clearScreen();
-	displayHeader();
-	displayMenu();
+	do {
+		clearScreen();
+		displayHeader();
+		displayMenu();
 
+		input = getchar();
 
+		switch (input) {
+			case 1:
+				//displayEmployees();
+				break;
+
+			case 2:
+				//newEmployee();
+				break;
+
+			case 3:
+				//setCurrentEmployee(char *name, bool b);
+				break;
+
+			case 4:
+				//changeDept(char *name, Department_t dept)
+				break;
+
+			case 5:
+				//changeRate(char *name, Rate_t rate)
+				break;
+				
+			case 6:
+				//void processWages(Employee_t empArr[])
+				break;
+
+			case 7:
+
+				break;
+
+			default:
+
+				printf("Unrecognised Command - Please enter value from 1-7")
+		}
+
+	} while (input != '7');
+
+	//processWages();
 
 
 	// close infile
@@ -181,8 +222,9 @@ void displayMenu(void) {
 	printText("3. Change Employee Employment status\n");
 	printText("4. Change Employee Department\n");
 	printText("5. Change Employee Pay Rate\n");
-	printText("6. Calculate Payrole for this week\n\n");
-	printText("Please select an option from the menu [1-6]: ");
+	printText("6. Calculate Payroll for this week\n\n");
+	printText("7. Quit\n\n");
+	printText("Please select an option from the menu [1-7]: ");
 }
 
 /* Processes wages for employees and save to file */
