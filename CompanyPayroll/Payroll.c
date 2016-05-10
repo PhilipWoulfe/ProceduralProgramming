@@ -49,6 +49,9 @@ void clearScreen(void);
 /* Load text with character delay */
 void printText(char *text);
 
+/* Display main menu */
+void displayMenu(void);
+
 /* Create a new employee*/
 void newEmployee(char *name, Department_t dept, Rate_t rate);
 
@@ -66,7 +69,7 @@ void saveEmployeesToFile(Employee_t empArr[]);
 
 /* Processes wages for employees */
 //void processWages(Employee_t empArr[]);
-void processWages(); //TODO reimplement previous code
+void processWages(); //TODO Reimplement
 
 
 int main(int argc, char* argv[])
@@ -163,16 +166,28 @@ void printText(char *text) {
 
 	for (int i = 0; text[i] != '\0'; i++) {
 		printf("%c", text[i]);
-		fflush(stdout);
+		fflush(stdout); // outputs to console 1 char at a time instead of buffering all first
 		Sleep(50);
 	}
 
 	Sleep(1000);
 }
 
+/* Display main menu */
+void displayMenu(void) {
+	printText("Welcome to the Wolf Accounting Wolf Payroll™ System.\n");
+	printText("1. View Employees");
+	printText("2. Add Employee");
+	printText("3. Change Employee Employment status");
+	printText("4. Change Employee Department");
+	printText("5. Change Employee Pay Rate");
+	printText("6. Calculate Payrole for ");
+	printText("Please select an option from the menu [1-5]:");
+}
+
 /* Processes wages for employees and save to file */
-//void processWages(Employee_t empArr[]) {
-void processWages() { //TODO reimplement previous line
+//void processWages(Employee_t empArr[]) { //TODO reimplement
+void processWages() { 
 	
 
 
@@ -180,19 +195,46 @@ void processWages() { //TODO reimplement previous line
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
 
+	// get year
 	char year[5];
 	sprintf(year, "%d", tm.tm_year + 1900);
 
+	// get month
 	char month[3];
-	sprintf(month, "%d", tm.tm_mon + 1);
+	char tempMonth[3];
+	strcpy(month, "0");
 
+	int monthNum = tm.tm_mon + 1;
+	sprintf(tempMonth, "%d", monthNum);
+	
+	// add 0 if necessary
+	if (monthNum / 10 == 0) {
+		// convert int to char *
+		strcat(month, tempMonth);
+	}
+	else
+		strcpy(month, tempMonth);
+	
+	// get day
 	char day[3];
-	sprintf(day, "%d", tm.tm_mday);
+	char tempDay[3];
+	strcpy(day, "0");
+
+	int dayNum = tm.tm_mday + 7 - tm.tm_wday; // gets date for Sunday of that week
+	sprintf(tempDay, "%d", dayNum);
+	
+	// add 0 if necessary
+	if (dayNum / 10 == 0)
+		strcat(day, tempDay);
+	else
+		strcpy(day, tempDay);
 
 	// create output file name
-	char *outfile = malloc(sizeof("Payroll_" + sizeof(year) + sizeof("-") + sizeof(month) + sizeof("-") + sizeof(day) + sizeof(".csv") + 1));
+	char *outfile_basic = "Payroll_Week_Ending_";
+	int temp = sizeof(outfile_basic) + sizeof(year) + sizeof("-") + sizeof(3) + sizeof("-") + sizeof(3) + sizeof(".csv") + '\0';
+	char *outfile = malloc(temp);
 	
-	outfile = strcpy(outfile, "Payroll_");
+	outfile = strcpy(outfile, outfile_basic);
 	
 	// add year
 	outfile = strcat(outfile, year); 
@@ -225,6 +267,9 @@ void processWages() { //TODO reimplement previous line
 		
 		Sleep(2000);
 		
+		// free memory
+		free(messageFull);
+
 		printText("Exiting program...\n");
 		//fprintf(stderr, "Could not create %s.\n", outfile);
 		return 3;
@@ -237,6 +282,6 @@ void processWages() { //TODO reimplement previous line
 	fclose(outptr);
 	
 	// free memory
-	free(outfile);
+	//free(outfile); // TODO Causing error
 
 }
