@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 	// ensure proper usage
 	if (argc != 1)
 	{
-		printf("Usage: ./companyPayroll (No arguments)\n");
+		printf("Usage: ./payroll (No arguments)\n");
 		return 1;
 	}
 
@@ -92,10 +92,10 @@ int main(int argc, char* argv[])
 	{
 		/* Create message string */
 		char *message = "Could not open ";
-		char *messageFull = malloc(strlen(message) + 1 + strlen(infile) + "\n");
+		char *messageFull = malloc(strlen(message) + 1 + strlen(infile) + "...\n");
 		strcpy(messageFull, message);
 		strcat(messageFull, infile);
-		strcat(messageFull, "\n");
+		strcat(messageFull, "...\n");
 
 		printText(messageFull);
 		
@@ -174,6 +174,8 @@ void printText(char *text) {
 //void processWages(Employee_t empArr[]) {
 void processWages() { //TODO reimplement previous line
 	
+
+
 	// get date
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
@@ -187,7 +189,7 @@ void processWages() { //TODO reimplement previous line
 	char day[3];
 	sprintf(day, "%d", tm.tm_mday);
 
-	// output file name
+	// create output file name
 	char *outfile = malloc(sizeof("Payroll_" + sizeof(year) + sizeof("-") + sizeof(month) + sizeof("-") + sizeof(day) + sizeof(".csv") + 1));
 	
 	outfile = strcpy(outfile, "Payroll_");
@@ -203,16 +205,38 @@ void processWages() { //TODO reimplement previous line
 	outfile = strcat(outfile, day);
 	outfile = strcat(outfile, ".csv");
 
-	// open output file
+	printText("Creating output file...\n");
+	
+	// create output file
 	FILE* outptr = fopen(outfile, "w");
 	if (outptr == NULL)
 	{
 		// TODO reimplement somehow
 		//fclose(inptr); 
-		fprintf(stderr, "Could not create %s.\n", outfile);
+
+		// create error message
+		char *message = "Could not create ";
+		char *messageFull = malloc(strlen(message) + 1 + strlen(outfile) + "...\n");
+		strcpy(messageFull, message);
+		strcat(messageFull, outfile);
+		strcat(messageFull, "...\n");
+
+		printText(messageFull);
+		
+		Sleep(2000);
+		
+		printText("Exiting program...\n");
+		//fprintf(stderr, "Could not create %s.\n", outfile);
 		return 3;
 	}
-
+	else {
+		printText("Output file created...\n");
+	}
+	
 	// close outfile
 	fclose(outptr);
+	
+	// free memory
+	free(outfile);
+
 }
